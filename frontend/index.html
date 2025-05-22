@@ -1,7 +1,36 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- Dokumenttyp: HTML5 -->
 <html>
-<head><title>Frontend</title></head>
+<head>
+    <title>Frontend</title> <!-- Seitentitel im Browser-Tab -->
+</head>
 <body>
-<h1>Willkommen!</h1>
+<h2>Login</h2> <!-- Überschrift für das Formular -->
+
+<form id="loginForm"> <!-- Beginn des Login-Formulars -->
+    <input type="text" id="username" placeholder="Benutzername" required /> <!-- Eingabefeld für Benutzername -->
+    <input type="password" id="password" placeholder="Passwort" required /> <!-- Eingabefeld für Passwort -->
+    <button type="submit">Login</button> <!-- Absende-Button -->
+</form>
+
+<script>
+    // Wenn das Formular abgeschickt wird:
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Verhindert das Neuladen der Seite (Standardverhalten eines Formulars)
+
+        // Sende HTTP-POST-Anfrage an PHP-Server mit eingegebenen Daten
+        const res = await fetch('http://localhost:8000/login.php', { // Anfrage an Backend (lokal)
+            method: 'POST', // Methode: POST = Daten senden
+            headers: { 'Content-Type': 'application/json' }, // Sagt dem Server: Es kommt JSON
+            body: JSON.stringify({ // Inhalt der Nachricht wird in JSON umgewandelt
+                username: document.getElementById('username').value, // Holt den eingegebenen Benutzernamen
+                password: document.getElementById('password').value  // Holt das eingegebene Passwort
+            })
+        });
+
+        const data = await res.json(); // Antwort vom Server wird als JSON gelesen
+        alert(data.message); // Zeigt die Rückmeldung vom Server im Browserfenster an (z. B. "Login erfolgreich")
+    });
+</script>
+
 </body>
 </html>
